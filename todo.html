@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoList Project</title>
+    <style>
+        /* todo.css */
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: linear-gradient(to right,#c5173c,#1247b8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    place-content: center;
+  
+  }
+  
+  h1 {
+    font-size: 3rem;
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  /* Form Styles */
+  form {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    text-align: center;
+  }
+  
+  /* Input Field Styles */
+  .todoValue {
+    width: 65%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .todoValue:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+    outline: none;
+  }
+  
+  /* Button Styles */
+  .btn {
+    background-color: #1a73e8;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+  }
+  
+  .btn:hover {
+    background-color: #1558b0;
+    transform: scale(1.05);
+  }
+  
+  /* Todo List Container Styles */
+  .todoLists {
+    margin-top: 20px;
+    padding: 0;
+    list-style-type: none;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+    padding-right: 10px;
+  }
+  
+  /* Individual Todo Item Styles */
+  .todoLists li {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .todoLists li:hover {
+    background-color: #f54b4b;
+    transform: translateY(-3px);
+    color: #fff;
+    
+  }
+  
+  /* Todo Item Remove Button */
+  .todoLists li button {
+    background-color: transparent;
+    border: none;
+    color: #e53935;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    
+  }
+  
+  .todoLists li button:hover {
+    color: yellow;
+  }
+  
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <br/>
+    <form>
+    <input type="text" class="todoValue" placeholder="Write here.." size="30%"/>
+
+    
+    <button class="btn">Add Todo</button>
+    <div class="todoLists">
+        <ol>
+        <li>For Example<button class="bn">Click to Delete</button></li>
+    </ol>
+</div>
+        
+    </form>
+    <script>
+        const todoLists = document.querySelector(".todoLists");
+const listValue = document.querySelector(".todoValue");
+const bn = document.querySelector(".bn");
+
+// Add to local storage
+let todoListValue = [];
+
+// Get todo list from local storage
+const getTodoListFromLS = () => {
+  const todos = localStorage.getItem("todoKey");
+  return todos ? JSON.parse(todos) : [];
+};
+
+// Remove a todo from the list and update local storage
+const removeTodoList = (e) => {
+  const currentTodo = e.target; // Event delegation
+  const todoText = currentTodo.textContent;
+  todoListValue = todoListValue.filter((curTodoValue) => curTodoValue !== todoText);
+
+  // Update local storage with the new list
+  addLocalStorage(todoListValue);
+
+  // Remove the element from the DOM
+  currentTodo.remove();
+  console.log(todoListValue);
+};
+
+// Add to local storage
+const addLocalStorage = (todo) => {
+  localStorage.setItem("todoKey", JSON.stringify(todo));
+};
+
+// Add todo list
+const addTodoList = (e) => {
+  e.preventDefault();
+
+  // Get the current todo list from local storage
+  todoListValue = getTodoListFromLS();
+
+  // Trim the input value to avoid adding empty or whitespace-only todos
+  let newTodo = listValue.value.trim();
+
+  // Check if the trimmed todo is not empty and does not already exist in the list
+  if (newTodo.length !== 0 && !todoListValue.includes(newTodo)) {
+    // Add the new todo to the list
+    todoListValue.push(newTodo);
+
+    // Avoid duplicate values in local storage
+    todoListValue = [...new Set(todoListValue)];
+
+    // Update local storage with the new list
+    addLocalStorage(todoListValue);
+
+    // Add the new todo to the UI
+    const liElement = document.createElement("li");
+    // const bnElem = document.createElement(".bn");
+    // const liElement = document.createElement("button");
+    liElement.innerText = newTodo; // Use trimmed value
+
+    // Append the new todo item to the todo list element
+    todoLists.append(liElement);
+
+    // Clear the input field after adding the todo
+    listValue.value = "";
+  }
+};
+
+// Add event listener to the button for adding todos
+document.querySelector(".btn").addEventListener("click", (e) => {
+  addTodoList(e);
+});
+
+// Add event listener to the todo list for removing todos using event delegation
+todoLists.addEventListener("click", (e) => {
+  removeTodoList(e);
+});
+
+    </script>
+</body>
+</html>
