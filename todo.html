@@ -3,222 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TodoList Project</title>
+    <title>Enhanced TodoList Project</title>
     <style>
-        /* todo.css */
+        /* Enhanced todo.css */
 
-/* Global Styles */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-image: linear-gradient(to right,#c5173c,#1247b8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    place-content: center;
-  
-  }
-  
-  h1 {
-    font-size: 3rem;
-    color: #fff;
-    text-align: center;
-    font-weight: bold;
-  }
-  
-  /* Form Styles */
-  form {
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 30px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-    text-align: center;
-  }
-  
-  /* Input Field Styles */
-  .todoValue {
-    width: 65%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    margin-bottom: 15px;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .todoValue:focus {
-    border-color: #1a73e8;
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
-    outline: none;
-  }
-  
-  /* Button Styles */
-  .btn {
-    background-color: #1a73e8;
-    color: #ffffff;
-    border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
-  }
-  
-  .btn:hover {
-    background-color: #1558b0;
-    transform: scale(1.05);
-  }
-  
-  /* Todo List Container Styles */
-  .todoLists {
-    margin-top: 20px;
-    padding: 0;
-    list-style-type: none;
-    max-height: 300px;
-    overflow-y: auto;
-    text-align: left;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 10px;
-    padding-right: 10px;
-  }
-  
-  /* Individual Todo Item Styles */
-  .todoLists li {
-    background-color: #f9f9f9;
-    padding: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .todoLists li:hover {
-    background-color: #f54b4b;
-    transform: translateY(-3px);
-    color: #fff;
-    
-  }
-  
-  /* Todo Item Remove Button */
-  .todoLists li button {
-    background-color: transparent;
-    border: none;
-    color: #e53935;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: color 0.3s ease;
-    
-  }
-  
-  .todoLists li button:hover {
-    color: yellow;
-  }
-  
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #ffffff;
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+        }
+
+        /* Form Container */
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Input Section */
+        .input-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .todoValue {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            color: #2d3748;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .todoValue:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .todoValue::placeholder {
+            color: #a0aec0;
+        }
+
+        /* Button Styles */
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            border: none;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Todo List Container */
+        .todoLists {
+            margin-top: 20px;
+        }
+
+        .todoLists ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e0 #f7fafc;
+        }
+
+        .todoLists ol::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .todoLists ol::-webkit-scrollbar-track {
+            background: #f7fafc;
+            border-radius: 3px;
+        }
+
+        .todoLists ol::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .todoLists ol::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+
+        /* Individual Todo Item */
+        .todoLists li {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .todoLists li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .todoLists li:hover::before {
+            transform: scaleY(1);
+        }
+
+        .todoLists li:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+            border-color: transparent;
+        }
+
+        .todo-text {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #2d3748;
+            transition: color 0.3s ease;
+            word-break: break-word;
+        }
+
+        .todoLists li:hover .todo-text {
+            color: #ffffff;
+        }
+
+        /* Remove Button */
+        .remove-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .remove-btn:hover {
+            background: linear-gradient(135deg, #ff5252, #f44336);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+        }
+
+        .remove-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        .empty-state::before {
+            content: '📝';
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+                max-width: 100%;
+            }
+            
+            .input-section {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .todoLists li {
+                padding: 16px;
+            }
+        }
+
+        /* Animation for new todos */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .todo-item-new {
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Loading animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body>
     <h1>Todo List</h1>
-    <br/>
-    <form>
-    <input type="text" class="todoValue" placeholder="Write here.." size="30%"/>
-
     
-    <button class="btn">Add Todo</button>
-    <div class="todoLists">
-        <ol>
-        <li>For Example<button class="bn">Click to Delete</button></li>
-    </ol>
-</div>
-        
-    </form>
+    <div class="container">
+        <form>
+            <div class="input-section">
+                <input type="text" class="todoValue" placeholder="What needs to be done?" maxlength="200"/>
+                <button type="submit" class="btn">Add Todo</button>
+            </div>
+            
+            <div class="todoLists">
+                <ol>
+                    <li class="todo-item-new">
+                        <span class="todo-text">Welcome! Click the × to remove this example</span>
+                        <button class="remove-btn">×</button>
+                    </li>
+                </ol>
+            </div>
+        </form>
+    </div>
+
     <script>
-        const todoLists = document.querySelector(".todoLists");
-const listValue = document.querySelector(".todoValue");
-const bn = document.querySelector(".bn");
+        const todoLists = document.querySelector(".todoLists ol");
+        const listValue = document.querySelector(".todoValue");
+        const addBtn = document.querySelector(".btn");
+        const form = document.querySelector("form");
 
-// Add to local storage
-let todoListValue = [];
+        // Add to local storage
+        let todoListValue = [];
 
-// Get todo list from local storage
-const getTodoListFromLS = () => {
-  const todos = localStorage.getItem("todoKey");
-  return todos ? JSON.parse(todos) : [];
-};
+        // Get todo list from local storage
+        const getTodoListFromLS = () => {
+            const todos = localStorage.getItem("todoKey");
+            return todos ? JSON.parse(todos) : [];
+        };
 
-// Remove a todo from the list and update local storage
-const removeTodoList = (e) => {
-  const currentTodo = e.target; // Event delegation
-  const todoText = currentTodo.textContent;
-  todoListValue = todoListValue.filter((curTodoValue) => curTodoValue !== todoText);
+        // Create todo item HTML
+        const createTodoHTML = (todoText) => {
+            const liElement = document.createElement("li");
+            liElement.className = "todo-item-new";
+            liElement.innerHTML = `
+                <span class="todo-text">${todoText}</span>
+                <button class="remove-btn">×</button>
+            `;
+            return liElement;
+        };
 
-  // Update local storage with the new list
-  addLocalStorage(todoListValue);
+        // Remove a todo from the list and update local storage
+        const removeTodoList = (e) => {
+            if (e.target.classList.contains('remove-btn')) {
+                const todoItem = e.target.closest('li');
+                const todoText = todoItem.querySelector('.todo-text').textContent;
+                
+                // Add removal animation
+                todoItem.style.animation = 'slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) reverse';
+                
+                setTimeout(() => {
+                    todoListValue = todoListValue.filter((curTodoValue) => curTodoValue !== todoText);
+                    addLocalStorage(todoListValue);
+                    todoItem.remove();
+                    
+                    // Show empty state if no todos
+                    if (todoListValue.length === 0) {
+                        showEmptyState();
+                    }
+                }, 300);
+            }
+        };
 
-  // Remove the element from the DOM
-  currentTodo.remove();
-  console.log(todoListValue);
-};
+        // Show empty state
+        const showEmptyState = () => {
+            todoLists.innerHTML = '<div class="empty-state">No todos yet. Add one above!</div>';
+        };
 
-// Add to local storage
-const addLocalStorage = (todo) => {
-  localStorage.setItem("todoKey", JSON.stringify(todo));
-};
+        // Add to local storage
+        const addLocalStorage = (todos) => {
+            localStorage.setItem("todoKey", JSON.stringify(todos));
+        };
 
-// Add todo list
-const addTodoList = (e) => {
-  e.preventDefault();
+        // Load todos from local storage
+        const loadTodos = () => {
+            todoListValue = getTodoListFromLS();
+            todoLists.innerHTML = '';
+            
+            if (todoListValue.length === 0) {
+                // Add welcome message
+                const welcomeItem = createTodoHTML("Welcome! Click the × to remove this example");
+                todoLists.appendChild(welcomeItem);
+            } else {
+                todoListValue.forEach(todo => {
+                    const todoItem = createTodoHTML(todo);
+                    todoLists.appendChild(todoItem);
+                });
+            }
+        };
 
-  // Get the current todo list from local storage
-  todoListValue = getTodoListFromLS();
+        // Add todo list
+        const addTodoList = (e) => {
+            e.preventDefault();
+            
+            // Get the current todo list from local storage
+            todoListValue = getTodoListFromLS();
+            
+            // Trim the input value
+            let newTodo = listValue.value.trim();
+            
+            // Validate input
+            if (newTodo.length === 0) {
+                listValue.focus();
+                return;
+            }
+            
+            if (todoListValue.includes(newTodo)) {
+                alert('This todo already exists!');
+                listValue.focus();
+                return;
+            }
+            
+            // Add loading state
+            addBtn.classList.add('loading');
+            addBtn.textContent = '';
+            
+            setTimeout(() => {
+                // Add the new todo to the list
+                todoListValue.push(newTodo);
+                
+                // Update local storage
+                addLocalStorage(todoListValue);
+                
+                // Clear empty state if present
+                const emptyState = todoLists.querySelector('.empty-state');
+                if (emptyState) {
+                    emptyState.remove();
+                }
+                
+                // Add the new todo to the UI
+                const todoItem = createTodoHTML(newTodo);
+                todoLists.appendChild(todoItem);
+                
+                // Clear input and remove loading state
+                listValue.value = "";
+                addBtn.classList.remove('loading');
+                addBtn.textContent = 'Add Todo';
+                
+                // Focus back to input
+                listValue.focus();
+            }, 300);
+        };
 
-  // Trim the input value to avoid adding empty or whitespace-only todos
-  let newTodo = listValue.value.trim();
+        // Event listeners
+        form.addEventListener("submit", addTodoList);
+        todoLists.addEventListener("click", removeTodoList);
 
-  // Check if the trimmed todo is not empty and does not already exist in the list
-  if (newTodo.length !== 0 && !todoListValue.includes(newTodo)) {
-    // Add the new todo to the list
-    todoListValue.push(newTodo);
+        // Load todos on page load
+        document.addEventListener('DOMContentLoaded', loadTodos);
 
-    // Avoid duplicate values in local storage
-    todoListValue = [...new Set(todoListValue)];
-
-    // Update local storage with the new list
-    addLocalStorage(todoListValue);
-
-    // Add the new todo to the UI
-    const liElement = document.createElement("li");
-    // const bnElem = document.createElement(".bn");
-    // const liElement = document.createElement("button");
-    liElement.innerText = newTodo; // Use trimmed value
-
-    // Append the new todo item to the todo list element
-    todoLists.append(liElement);
-
-    // Clear the input field after adding the todo
-    listValue.value = "";
-  }
-};
-
-// Add event listener to the button for adding todos
-document.querySelector(".btn").addEventListener("click", (e) => {
-  addTodoList(e);
-});
-
-// Add event listener to the todo list for removing todos using event delegation
-todoLists.addEventListener("click", (e) => {
-  removeTodoList(e);
-});
-
+        // Auto-focus input on page load
+        window.addEventListener('load', () => {
+            listValue.focus();
+        });
     </script>
 </body>
 </html>
